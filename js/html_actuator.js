@@ -24,12 +24,16 @@ HTMLActuator.prototype.actuate = function (grid, metadata) {
     self.updateScore(metadata.score);
     self.updateBestScore(metadata.bestScore);
 
-    if (metadata.over) self.message(false); // You lose
-    if (metadata.won) self.message(true); // You win!
+    if (metadata.gameOver) {
+      if (metadata.over) self.message(false); // You lose
+      else if (metadata.won) self.message(true); // You win!
+    }
+
   });
 };
 
-HTMLActuator.prototype.restart = function () {
+// Continues the game (both restart and keep playing)
+HTMLActuator.prototype.continue = function () {
   this.clearMessage();
 };
 
@@ -45,10 +49,13 @@ HTMLActuator.prototype.addTile = function (tile) {
   var wrapper   = document.createElement("div");
   var inner     = document.createElement("div");
   var position  = tile.previousPosition || { x: tile.x, y: tile.y };
-  positionClass = this.positionClass(position);
+  var positionClass = this.positionClass(position);
 
   // We can't use classlist because it somehow glitches when replacing classes
   var classes = ["tile", "tile-" + tile.value, positionClass];
+
+  if (tile.value > 2048) classes.push("tile-gold");
+
   this.applyClasses(wrapper, classes);
 
   inner.classList.add("tile-inner");
@@ -123,5 +130,7 @@ HTMLActuator.prototype.message = function (won) {
 };
 
 HTMLActuator.prototype.clearMessage = function () {
-  this.messageContainer.classList.remove("game-won", "game-over");
+  // IE only takes one value to remove at a time.
+  this.messageContainer.classList.remove("game-won");
+  this.messageContainer.classList.remove("game-over");
 };
