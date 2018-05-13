@@ -4,8 +4,8 @@
 "use strict";
 
 const CHAIN_ID = 1;
-const TX_HASH = "6c5b55e2bc6786dc8b6916f925c83d046cd77934d4624a2046dbeff3e14a9ede";
-const CONTRACT_ADDR = "n1y62eeh6koSVGJj5RJU2WYjy91xUxpavXD";
+const TX_HASH = "0d130f54a2ee4f056aa379339c8c217b873c6dcdeaa560fefbba486f6fdb0671";
+const CONTRACT_ADDR = "n1eJBEG4Z7xqq4c7yBfXjEpYWgsbA2KRZeH";
 
 
 function ScoreDao() {
