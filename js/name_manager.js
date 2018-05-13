@@ -18,6 +18,10 @@ function NameManager(localStorageManager, scoreDao, listener) {
 
     this.btn.onclick = function () {
         var name = self.input.value;
+        if (name === '') {
+            alert('昵称不能为空！');
+            return;
+        }
         var timestamp = Date.parse(new Date());
         name = name + "@" + timestamp;
         self.localStorageManager.setUserName(name);

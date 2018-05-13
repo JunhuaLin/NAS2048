@@ -6,12 +6,20 @@ function RankManager(score_dao) {
     var self = this;
     this.scoreDao = score_dao;
     this.rankTable = document.querySelector(".rank-table");
-
-    setInterval(this.updateRankData, 60 * 1000);
+    self.updateRankData();
+    window.setInterval(function () {
+        self.updateRankData();
+    }, 60 * 1000);
 }
 
 RankManager.prototype.updateRankData = function () {
-    var rankList = score_dao.getRank();
+    var rankList = [];
+    try {
+        rankList = this.scoreDao.getRank();
+    } catch (err) {
+        rankList = [];
+    }
+
     console.log(JSON.stringify(rankList));
     for (var rowIndex = 1; rowIndex < this.rankTable.rows.length; rowIndex++) {
         var row = this.rankTable.rows[rowIndex];

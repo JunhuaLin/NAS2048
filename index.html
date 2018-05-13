@@ -30,80 +30,12 @@
 
     存储信息类LocalStorageManager
     -->
-    <div class="input-name">
-        what's name?:<input type="text" name="name" id="input">
-        <input type="button" name="finish" value="完成" id="btn"/>
-    </div>
 
     <!--获取排名：
     1、排名在游戏的左边并排展示。
     2、展示内容为：排名-用户名-分数。数据格式为jsonarray：[{name:score},]
     3、排名分钟更新一次。
     -->
-    <div class="rank">
-        <table class="rank-table" border="1">
-            <tr>
-                <th>sort</th>
-                <th>name</th>
-                <th>score</th>
-            </tr>
-
-            <div id="rank-content">
-                <tr>
-                    <td>--</td>
-                    <td>--</td>
-                    <td>--</td>
-                </tr>
-                <tr>
-                    <td>--</td>
-                    <td>--</td>
-                    <td>--</td>
-                </tr>
-                <tr>
-                    <td>--</td>
-                    <td>--</td>
-                    <td>--</td>
-                </tr>
-                <tr>
-                    <td>--</td>
-                    <td>--</td>
-                    <td>--</td>
-                </tr>
-                <tr>
-                    <td>--</td>
-                    <td>--</td>
-                    <td>--</td>
-                </tr>
-
-                <tr>
-                    <td>--</td>
-                    <td>--</td>
-                    <td>--</td>
-                </tr>
-                <tr>
-                    <td>--</td>
-                    <td>--</td>
-                    <td>--</td>
-                </tr>
-                <tr>
-                    <td>--</td>
-                    <td>--</td>
-                    <td>--</td>
-                </tr>
-                <tr>
-                    <td>--</td>
-                    <td>--</td>
-                    <td>--</td>
-                </tr>
-                <tr>
-                    <td>--</td>
-                    <td>--</td>
-                    <td>--</td>
-                </tr>
-
-            </div>
-        </table>
-    </div>
 
     <!--游戏面板-->
     <div class="game">
@@ -121,52 +53,128 @@
             <a class="restart-button">New Game</a>
         </div>
 
-        <div class="game-container">
-            <div class="game-message">
-                <p></p>
-                <div class="lower">
-                    <a class="keep-playing-button">Keep going</a>
-                    <a class="retry-button">Try again</a>
-                </div>
+        <div class="main-content clearfix">
+            <div class="rank fl">
+                <table class="rank-table">
+                    <tr>
+                        <th>sort</th>
+                        <th>name</th>
+                        <th>score</th>
+                    </tr>
+
+                    <div id="rank-content">
+                        <tr>
+                            <td>--</td>
+                            <td>--</td>
+                            <td>--</td>
+                        </tr>
+                        <tr>
+                            <td>--</td>
+                            <td>--</td>
+                            <td>--</td>
+                        </tr>
+                        <tr>
+                            <td>--</td>
+                            <td>--</td>
+                            <td>--</td>
+                        </tr>
+                        <tr>
+                            <td>--</td>
+                            <td>--</td>
+                            <td>--</td>
+                        </tr>
+                        <tr>
+                            <td>--</td>
+                            <td>--</td>
+                            <td>--</td>
+                        </tr>
+
+                        <tr>
+                            <td>--</td>
+                            <td>--</td>
+                            <td>--</td>
+                        </tr>
+                        <tr>
+                            <td>--</td>
+                            <td>--</td>
+                            <td>--</td>
+                        </tr>
+                        <tr>
+                            <td>--</td>
+                            <td>--</td>
+                            <td>--</td>
+                        </tr>
+                        <tr>
+                            <td>--</td>
+                            <td>--</td>
+                            <td>--</td>
+                        </tr>
+                        <tr>
+                            <td>--</td>
+                            <td>--</td>
+                            <td>--</td>
+                        </tr>
+                    </div>
+                </table>
             </div>
 
-            <div class="grid-container">
-                <div class="grid-row">
-                    <div class="grid-cell"></div>
-                    <div class="grid-cell"></div>
-                    <div class="grid-cell"></div>
-                    <div class="grid-cell"></div>
+            <div class="game-container fr">
+                <div class="game-message">
+                    <p></p>
+                    <div class="lower">
+                        <a class="keep-playing-button">Keep going</a>
+                        <a class="retry-button">Try again</a>
+                    </div>
                 </div>
-                <div class="grid-row">
-                    <div class="grid-cell"></div>
-                    <div class="grid-cell"></div>
-                    <div class="grid-cell"></div>
-                    <div class="grid-cell"></div>
-                </div>
-                <div class="grid-row">
-                    <div class="grid-cell"></div>
-                    <div class="grid-cell"></div>
-                    <div class="grid-cell"></div>
-                    <div class="grid-cell"></div>
-                </div>
-                <div class="grid-row">
-                    <div class="grid-cell"></div>
-                    <div class="grid-cell"></div>
-                    <div class="grid-cell"></div>
-                    <div class="grid-cell"></div>
-                </div>
-            </div>
 
-            <div class="tile-container">
+                <div class="grid-container">
+                    <div class="grid-row">
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell"></div>
+                    </div>
+                    <div class="grid-row">
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell"></div>
+                    </div>
+                    <div class="grid-row">
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell"></div>
+                    </div>
+                    <div class="grid-row">
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell"></div>
+                    </div>
+                </div>
 
+                <div class="tile-container"></div>
+
+                <!-- 输入用户名 -->
+                <div class="input-name">
+                    <div class="input-main">
+                        <p>What's your name? </p>
+                        <div class="input-bottom">
+                            <input type="text" name="name" id="input" class="input-box" placeholder="请输入你的昵称"
+                                   autofocus/>
+                            <input type="button" name="finish" value="完成" id="btn" class="finish"/>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-
-        <p class="game-explanation">
-            <strong class="important">How to play:</strong> Use your <strong>arrow keys</strong> to move the tiles. When
-            two tiles with the same number touch, they <strong>merge into one!</strong>
-        </p>
     </div>
+
+    <p class="game-explanation">
+        <strong class="important">How to play:</strong> Use your <strong>arrow keys</strong> to move the tiles. When
+        two tiles with the same number touch, they <strong>merge into one!</strong>
+    </p>
 
 </div>
 
