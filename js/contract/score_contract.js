@@ -3,12 +3,10 @@
 var ScoreContract = function () {
     LocalContractStorage.defineMapProperty(this, "sortMap");
     LocalContractStorage.defineProperty(this, "sortRank");
-    LocalContractStorage.defineProperty(this, "minScore");
 };
 
 ScoreContract.prototype = {
     init: function () {
-        this.minScore = 0;
         this.sortRank = [];
     },
 
@@ -35,30 +33,26 @@ ScoreContract.prototype = {
     },
 
     _insertScore: function (name, score) {
-        if (parseInt(score) > parseInt(this.minScore)) {
-            var scoreSort = this.sortRank;
-            var tempName = name;
-            if (scoreSort instanceof Array) {
-                for (var i = 0; i < scoreSort.length; i++) {
-                    if (scoreSort[i].name === name) {
-                        scoreSort[i].score = score;
-                        tempName = null;
-                        break;
-                    }
+        var scoreSort = this.sortRank;
+        var tempName = name;
+        if (scoreSort instanceof Array) {
+            for (var i = 0; i < scoreSort.length; i++) {
+                if (scoreSort[i].name === name) {
+                    scoreSort[i].score = score;
+                    tempName = null;
+                    break;
                 }
-
-                if (tempName) {
-                    scoreSort[scoreSort.length] = this._genUserScore(name, score);
-                }
-
-                scoreSort.sort(function (a, b) {
-                    return parseInt(a.score) < parseInt(b.score);
-                });
-
-                scoreSort.slice(0, 10);
-                this.minScore = scoreSort[scoreSort.length - 1].score;
-                this.sortRank = scoreSort;
             }
+
+            if (tempName) {
+                scoreSort[scoreSort.length] = this._genUserScore(name, score);
+            }
+
+            scoreSort.sort(function (a, b) {
+                return parseInt(a.score) < parseInt(b.score);
+            });
+
+            this.sortRank = scoreSort.slice(0, 10);
         }
     }
 

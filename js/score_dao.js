@@ -9,8 +9,8 @@ const MAIN_CONTRACT_ADDR = "n1eJBEG4Z7xqq4c7yBfXjEpYWgsbA2KRZeH";
 const MAIN_NAS_URL = "https://mainnet.nebulas.io";
 
 const TEST_CHAIN_ID = 1001;
-const TEST_TX_HASH = "a248e91fe6f87157accee302fcbd9c88b1e71590f7291b287537be9d40ab45cf";
-const TEST_CONTRACT_ADDR = "n1tkBpeFZt1H7snPcydmnNdptjCqLEEwo41";
+const TEST_TX_HASH = "896963628593923c8bae934ac98aba15afeb9e14927dbdca35d213db33450c67";
+const TEST_CONTRACT_ADDR = "n1z1VWZ6RttEFHYBb1pVFWsW96fyJ3QhJup";
 const TEST_NAS_URL = "https://testnet.nebulas.io";
 
 var NAS_ADDR = MAIN_CONTRACT_ADDR;
