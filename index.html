@@ -29,9 +29,10 @@
     <div class="pay">
         <!--用于输入keystore 输入通过后隐藏然后显示pay-show-->
         <div class="pay-input">
+            <p>请选择钱包地址并输入密码,用于发送分数信息交易和获取排行交易！</p>
             <input type="file" value="keystore" name="upload" id="keystore"/><br/>
             <input type="password" name="pw" value="nebulas2018" id="password" placeholder="input your password"/>
-            <input type="button" value="login" id="pay-login"/><br/>
+            <input type="button" value="unlock" id="pay-login"/><br/>
         </div>
 
         <!--keystore输入成功后展示钱包地址-->
@@ -39,6 +40,8 @@
             <p id="show-address-label">your address:</p>
             <p id="show-address">12312312313123123</p>
         </div>
+
+        <p>钱包信息只在当前页面有效，刷新或退出后失效！</p>
     </div>
 
     <!--游戏面板-->
