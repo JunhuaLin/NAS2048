@@ -3,23 +3,24 @@
  */
 "use strict";
 
-const CHAIN_ID = 1;
+const MAIN_CHAIN_ID = 1;
 const MAIN_TX_HASH = "0d130f54a2ee4f056aa379339c8c217b873c6dcdeaa560fefbba486f6fdb0671";
 const MAIN_CONTRACT_ADDR = "n1eJBEG4Z7xqq4c7yBfXjEpYWgsbA2KRZeH";
 const MAIN_NAS_URL = "https://mainnet.nebulas.io";
 
-
+const TEST_CHAIN_ID = 1001;
 const TEST_TX_HASH = "a248e91fe6f87157accee302fcbd9c88b1e71590f7291b287537be9d40ab45cf";
 const TEST_CONTRACT_ADDR = "n1tkBpeFZt1H7snPcydmnNdptjCqLEEwo41";
 const TEST_NAS_URL = "https://testnet.nebulas.io";
 
 var NAS_ADDR = MAIN_CONTRACT_ADDR;
+var CHAIN_ID = MAIN_CHAIN_ID;
 
 function ScoreDao() {
     this.sAccount = null;
     this.nonce = 0;
 
-    this.init(true);
+    this.init(false);
     this.doInput();
 }
 
@@ -28,9 +29,11 @@ ScoreDao.prototype.init = function (isDebug) {
     if (isDebug) {
         nas_url = TEST_NAS_URL;
         NAS_ADDR = TEST_CONTRACT_ADDR;
+        CHAIN_ID = TEST_CHAIN_ID;
     } else {
         nas_url = MAIN_NAS_URL;
         NAS_ADDR = MAIN_CONTRACT_ADDR;
+        CHAIN_ID = MAIN_CHAIN_ID;
     }
 
 
@@ -38,7 +41,7 @@ ScoreDao.prototype.init = function (isDebug) {
     this.neb = new nebulas.Neb();
     this.neb.setRequest(new nebulas.HttpRequest(nas_url));
     this.Account = nebulas.Account;
-    this.Transaction = this.neb.Transaction;
+    this.Transaction = nebulas.Transaction;
     this.api = this.neb.api;
     this.admin = this.neb.admin;
 };
@@ -131,22 +134,42 @@ ScoreDao.prototype.setScore = function (name, score) {
     if (!self.isUnlockKeyStore()) {
         return;
     }
-
-    self.api.call({
-        from: self.sAccount.getAddressString(),
+    var tx = new self.Transaction({
+        chainID: CHAIN_ID,
+        from: self.sAccount,
         to: NAS_ADDR,
         value: 0,
-        nonce: 1,
+        nonce: ++self.nonce,
         gasPrice: 1000000,
-        gasLimit: 2000000,
-        contract: {function: 'setScore', args: '["' + name + '","' + score + '"]'}
-    })
+        gasLimit: 3000000,
+        contract: {function: 'setScore', args: '["' + name + '",' + score + ']'} // owner , alias
+    });
+
+    tx.signTransaction();
+    self.api.sendRawTransaction(tx.toProtoString())
         .then(function (resp) {
-            console.log("setScore succ:" + resp.result);
+            console.log("setScore succ:" + JSON.stringify(resp));
         })
         .catch(function (err) {
-            console.log(err);
+            console.error(err);
         });
+
+    //测试
+    // self.api.call({
+    //     from: self.sAccount.getAddressString(),
+    //     to: NAS_ADDR,
+    //     value: 0,
+    //     nonce: self.nonce + 1,
+    //     gasPrice: 1000000,
+    //     gasLimit: 3000000,
+    //     contract: {function: 'setScore', args: '["' + name + '",' + score + ']',}
+    // })
+    //     .then(function (resp) {
+    //         console.log("setScore succ:" + resp.result);
+    //     })
+    //     .catch(function (err) {
+    //         console.log(err);
+    //     });
 
 };
 
@@ -160,10 +183,10 @@ ScoreDao.prototype.getScore = function (name, listener) {
         from: self.sAccount.getAddressString(),
         to: NAS_ADDR,
         value: 0,
-        nonce: 1,
+        nonce: self.nonce,
         gasPrice: 1000000,
-        gasLimit: 2000000,
-        contract: {function: 'getScore', args: '["' + name + '"]'}
+        gasLimit: 3000000,
+        contract: {function: 'getScore', args: '["' + name + '"]',}
     })
         .then(function (resp) {
             listener && typeof (listener) === "function" && listener(resp.result);
@@ -184,7 +207,7 @@ ScoreDao.prototype.getRank = function (listener) {
         from: self.sAccount.getAddressString(),
         to: NAS_ADDR,
         value: 0,
-        nonce: 1,
+        nonce: self.nonce,
         gasPrice: 1000000,
         gasLimit: 3000000,
         contract: {function: 'getRank',}

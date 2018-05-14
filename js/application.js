@@ -22,6 +22,8 @@ window.requestAnimationFrame(function () {
         };
         var updateScore = function (score, bestScore) {
             // console.log("UpdateScore: score=" + score + "  bestScore:" + bestScore);
+            var username = localStorageManager.getUserName();
+            scoreDao.setScore(username, bestScore);
         };
 
         htmlActuator.setOnTerminatedListener(terminated);
