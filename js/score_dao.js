@@ -4,8 +4,8 @@
 "use strict";
 
 const MAIN_CHAIN_ID = 1;
-const MAIN_TX_HASH = "0d130f54a2ee4f056aa379339c8c217b873c6dcdeaa560fefbba486f6fdb0671";
-const MAIN_CONTRACT_ADDR = "n1eJBEG4Z7xqq4c7yBfXjEpYWgsbA2KRZeH";
+const MAIN_TX_HASH = "72475e4ab195fc4c1db5107e9d3a0a263e4fb1a0cc52b6c78b46937e7a1d149e";
+const MAIN_CONTRACT_ADDR = "n1gtKMCR4KXrvGJ3QLg47dEcB4sMeh63dXh";
 const MAIN_NAS_URL = "https://mainnet.nebulas.io";
 
 const TEST_CHAIN_ID = 1001;
