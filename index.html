@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="utf-8">
     <title>2048</title>
@@ -23,19 +23,23 @@
 </head>
 <body>
 <div class="container">
-    <!--设置用户名：
-    1、进入游戏先检测是否有用户名。
-    2、如果没有用户名，就使用user-name层遮挡游戏并提供输入框输入用户名。完成后进入游戏。
-    3、有用户名直接进入游戏。
 
-    存储信息类LocalStorageManager
-    -->
+    <!--nas钱包登录开启排名-->
 
-    <!--获取排名：
-    1、排名在游戏的左边并排展示。
-    2、展示内容为：排名-用户名-分数。数据格式为jsonarray：[{name:score},]
-    3、排名分钟更新一次。
-    -->
+    <div class="pay">
+        <!--用于输入keystore 输入通过后隐藏然后显示pay-show-->
+        <div class="pay-input">
+            <input type="file" value="keystore" name="upload" id="keystore"/><br/>
+            <input type="password" name="pw" value="nebulas2018" id="password" placeholder="input your password"/>
+            <input type="button" value="login" id="pay-login"/><br/>
+        </div>
+
+        <!--keystore输入成功后展示钱包地址-->
+        <div class="pay-show" style="display: none">
+            <p id="show-address-label">your address:</p>
+            <p id="show-address">12312312313123123</p>
+        </div>
+    </div>
 
     <!--游戏面板-->
     <div class="game">
@@ -53,6 +57,11 @@
             <a class="restart-button">New Game</a>
         </div>
 
+        <!--获取排名：
+        1、排名在游戏的左边并排展示。
+        2、展示内容为：排名-用户名-分数。数据格式为jsonarray：[{name:score},]
+        3、排名分钟更新一次。
+        -->
         <div class="main-content clearfix">
             <div class="rank fl">
                 <table class="rank-table">
@@ -156,6 +165,13 @@
 
                 <div class="tile-container"></div>
 
+                <!--设置用户名：
+                1、进入游戏先检测是否有用户名。
+                2、如果没有用户名，就使用user-name层遮挡游戏并提供输入框输入用户名。完成后进入游戏。
+                3、有用户名直接进入游戏。
+
+                存储信息类LocalStorageManager
+                -->
                 <!-- 输入用户名 -->
                 <div class="input-name">
                     <div class="input-main">

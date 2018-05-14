@@ -6,38 +6,44 @@ function RankManager(score_dao) {
     var self = this;
     this.scoreDao = score_dao;
     this.rankTable = document.querySelector(".rank-table");
+    self.daUpdateRankData([]);
     self.updateRankData();
     window.setInterval(function () {
         self.updateRankData();
     }, 60 * 1000);
 }
 
-RankManager.prototype.updateRankData = function () {
-    var rankList = [];
-    try {
-        rankList = this.scoreDao.getRank();
-    } catch (err) {
-        rankList = [];
+RankManager.prototype.daUpdateRankData = function (rankList) {
+    if (!rankList) {
+        rankList = []
     }
-
-    console.log(JSON.stringify(rankList));
-    for (var rowIndex = 1; rowIndex < this.rankTable.rows.length; rowIndex++) {
-        var row = this.rankTable.rows[rowIndex];
-        row.cells[0].innerHTML = rowIndex;
+    var self = this;
+    for (var rowIndex = 1; rowIndex < self.rankTable.rows.length; rowIndex++) {
+        var row = self.rankTable.rows[rowIndex];
+        row.cells[0].innerHTML = rowIndex + "";
 
         var scoreObj = rankList[rowIndex - 1];
-        console.log(JSON.stringify(scoreObj));
         if (scoreObj) {
             var username = scoreObj.name;
-            row.cells[1].innerHTML = username.substring(0, username.lastIndexOf('@'));
+            // var index = username.lastIndexOf('@');
+            // if (index > 0) {
+            //     username = username.substring(0, index);
+            // }
+            row.cells[1].innerHTML = username;
             row.cells[2].innerHTML = scoreObj.score;
         } else {
             row.cells[1].innerHTML = "--";
             row.cells[2].innerHTML = "--";
         }
-
     }
+};
 
+
+RankManager.prototype.updateRankData = function () {
+    var self = this;
+    this.scoreDao.getRank(function (rankList) {
+        self.daUpdateRankData(rankList);
+    });
 };
 
 RankManager.prototype.mockData = function () {

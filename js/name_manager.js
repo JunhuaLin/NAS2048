@@ -35,12 +35,10 @@ function NameManager(localStorageManager, scoreDao, listener) {
 
 NameManager.prototype.updateUserNameDisplay = function () {
     var username = this.localStorageManager.getUserName();
-    username = username.substring(0, username.lastIndexOf('@'));
-    try {
-        var score = this.scoreDao.getScore(username);
-        this.localStorageManager.setBestScore(score);
-    } catch (err) {
+    if (!username) {
+        return;
     }
+    username = username.substring(0, username.lastIndexOf('@'));
     this.spanName.innerHTML = username;
     this.showName.style.display = "";
     this.inputName.style.display = "none";

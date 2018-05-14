@@ -4,62 +4,137 @@
 "use strict";
 
 const CHAIN_ID = 1;
-const TX_HASH = "0d130f54a2ee4f056aa379339c8c217b873c6dcdeaa560fefbba486f6fdb0671";
-const CONTRACT_ADDR = "n1eJBEG4Z7xqq4c7yBfXjEpYWgsbA2KRZeH";
+const MAIN_TX_HASH = "0d130f54a2ee4f056aa379339c8c217b873c6dcdeaa560fefbba486f6fdb0671";
+const MAIN_CONTRACT_ADDR = "n1eJBEG4Z7xqq4c7yBfXjEpYWgsbA2KRZeH";
+const MAIN_NAS_URL = "https://mainnet.nebulas.io";
 
+
+const TEST_TX_HASH = "a248e91fe6f87157accee302fcbd9c88b1e71590f7291b287537be9d40ab45cf";
+const TEST_CONTRACT_ADDR = "n1tkBpeFZt1H7snPcydmnNdptjCqLEEwo41";
+const TEST_NAS_URL = "https://testnet.nebulas.io";
+
+var NAS_ADDR = MAIN_CONTRACT_ADDR;
 
 function ScoreDao() {
+    this.sAccount = null;
+    this.nonce = 0;
+
+    this.init(false);
+    this.doInput();
+}
+
+ScoreDao.prototype.init = function (isDebug) {
+    var nas_url;
+    if (isDebug) {
+        nas_url = TEST_NAS_URL;
+        NAS_ADDR = TEST_CONTRACT_ADDR;
+    } else {
+        nas_url = MAIN_NAS_URL;
+        NAS_ADDR = MAIN_CONTRACT_ADDR;
+    }
+
 
     var nebulas = require('nebulas');
     this.neb = new nebulas.Neb();
-    this.neb.setRequest(new nebulas.HttpRequest("https://mainnet.nebulas.io"));
-
+    this.neb.setRequest(new nebulas.HttpRequest(nas_url));
     this.Account = nebulas.Account;
     this.Transaction = this.neb.Transaction;
     this.api = this.neb.api;
     this.admin = this.neb.admin;
+};
 
-    this.sAccount = null;
+ScoreDao.prototype.doInput = function () {
+    var payInput = document.querySelector(".pay-input");
+    var keystoreFile = document.querySelector("#keystore");
+    var passwordText = document.querySelector("#password");
+    var loginBtn = document.querySelector("#pay-login");
 
-    this.nonce = 0;
-}
+    var payShow = document.querySelector(".pay-show");
+    var showAddress = document.querySelector("#show-address");
 
-
-ScoreDao.prototype.unlockKeyStore = function () {
     var self = this;
-    var fileReader = new FileReader();
-    fileReader.onload = function (ev) {
-        var parse = JSON.parse(ev.target.result);
+    loginBtn.onclick = function () {
+        var file = keystoreFile.files[0];
+        var pwd = passwordText.value;
 
-        var address = parse.address;
-        var password = "nebulas2018";
-        var account = new Account();
-        account.fromKey(parse, password, false);
-        self.sAccount = account;
+        console.log("file:" + file.name + " pwd:" + pwd);
+        if (!file) {
+            alert("please select keystore!");
+            return;
+        }
+        if (!pwd) {
+            alert("please input password!");
+            return;
+        }
 
-        self.api.getAccountState(address)
-            .then(function (resp) {
-                self.nonce = parseInt(resp.nonce);
-            })
-            .catch(function (reason) {
-                console.log(reason)
+        var fileReader = new FileReader();
+        fileReader.onload = function (ev) {
+            var result = ev.target.result;
+            var parse = null;
+            try {
+                parse = JSON.parse(result);
+            } catch (e) {
+                alert("keystore error!");
+                return;
+            }
+
+            var account = new self.Account();
+            account.fromKey(parse, pwd, false);
+            self.unlockKeyStore(account, function (isSucceed, address) {
+                if (isSucceed) {
+                    payShow.style.display = "";
+                    payInput.style.display = "none";
+                    showAddress.innerHTML = address;
+                } else {
+                    payShow.style.display = "none";
+                    payInput.style.display = "";
+                    showAddress.innerHTML = "";
+                    alert("keystore or password error!");
+                }
             });
+        };
+        try {
+            //读取keystore
+            fileReader.readAsText(file);
+        } catch (err) {
+        }
     };
+};
 
-    try {
-        //读取keystore
-        fileReader.readAsText(file);
-        var file = document.getElementById('fileSelector').files[0];
-    } catch (err) {
+ScoreDao.prototype.getAddress = function () {
+    return this.sAccount ? this.sAccount.getAddress() : null;
+};
 
-    }
+ScoreDao.prototype.isUnlockKeyStore = function () {
+    return this.sAccount != null;
+};
+
+ScoreDao.prototype.unlockKeyStore = function (account, listener) {
+    var self = this;
+    var address = account.getAddressString();
+    self.api.getAccountState(address)
+        .then(function (resp) {
+            self.sAccount = account;
+            self.nonce = parseInt(resp.nonce);
+            listener && typeof (listener) === "function" && listener(true, address);
+        })
+        .catch(function (reason) {
+            console.log(reason);
+            self.sAccount = null;
+            self.nonce = 0;
+            listener && typeof (listener) === "function" && listener(false, address);
+        });
 };
 
 ScoreDao.prototype.setScore = function (name, score) {
     var self = this;
+    if (!self.isUnlockKeyStore()) {
+        return;
+    }
+
     self.api.call({
         from: self.sAccount.getAddressString(),
-        to: CONTRACT_ADDR,
+        to: NAS_ADDR,
         value: 0,
         nonce: 1,
         gasPrice: 1000000,
@@ -67,7 +142,7 @@ ScoreDao.prototype.setScore = function (name, score) {
         contract: {function: 'setScore', args: '["' + name + '","' + score + '"]'}
     })
         .then(function (resp) {
-            console.log("succ:" + resp.result);
+            console.log("setScore succ:" + resp.result);
         })
         .catch(function (err) {
             console.log(err + " : " + resp);
@@ -75,11 +150,15 @@ ScoreDao.prototype.setScore = function (name, score) {
 
 };
 
-ScoreDao.prototype.getScore = function (name) {
+ScoreDao.prototype.getScore = function (name, listener) {
     var self = this;
+    if (!self.isUnlockKeyStore()) {
+        return;
+    }
+
     self.api.call({
         from: self.sAccount.getAddressString(),
-        to: CONTRACT_ADDR,
+        to: NAS_ADDR,
         value: 0,
         nonce: 1,
         gasPrice: 1000000,
@@ -87,28 +166,34 @@ ScoreDao.prototype.getScore = function (name) {
         contract: {function: 'getScore', args: '["' + name + '"]'}
     })
         .then(function (resp) {
-            console.log("succ:" + resp.result);
+            listener && typeof (listener) === "function" && listener(resp.result);
+            console.log("getScore succ:" + resp.result);
         })
         .catch(function (err) {
             console.log(err + " : " + resp);
         });
 };
 
-ScoreDao.prototype.getRank = function () {
+ScoreDao.prototype.getRank = function (listener) {
     var self = this;
+    if (!self.isUnlockKeyStore()) {
+        return;
+    }
+
     self.api.call({
         from: self.sAccount.getAddressString(),
-        to: CONTRACT_ADDR,
+        to: NAS_ADDR,
         value: 0,
         nonce: 1,
         gasPrice: 1000000,
-        gasLimit: 2000000,
-        contract: {function: 'getRank'}
+        gasLimit: 3000000,
+        contract: {function: 'getRank',}
     })
         .then(function (resp) {
-            console.log("succ:" + resp.result);
+            listener && typeof (listener) === "function" && listener(resp.result);
+            console.log("getRank succ:" + resp.result);
         })
         .catch(function (err) {
-            console.log(err + " : " + resp);
+            console.log("getRank failed:" + err);
         });
-}
+};

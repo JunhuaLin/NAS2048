@@ -3,7 +3,6 @@ window.requestAnimationFrame(function () {
 
     var localStorageManager = new LocalStorageManager();
     var scoreDao = new ScoreDao();
-    scoreDao.unlockKeyStore();
 
     new RankManager(scoreDao);
 
@@ -22,7 +21,7 @@ window.requestAnimationFrame(function () {
 
         };
         var updateScore = function (score, bestScore) {
-            console.log("UpdateScore: score=" + score + "  bestScore:" + bestScore);
+            // console.log("UpdateScore: score=" + score + "  bestScore:" + bestScore);
         };
 
         htmlActuator.setOnTerminatedListener(terminated);
