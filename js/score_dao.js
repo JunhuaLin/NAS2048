@@ -19,7 +19,7 @@ function ScoreDao() {
     this.sAccount = null;
     this.nonce = 0;
 
-    this.init(false);
+    this.init(true);
     this.doInput();
 }
 
@@ -145,7 +145,7 @@ ScoreDao.prototype.setScore = function (name, score) {
             console.log("setScore succ:" + resp.result);
         })
         .catch(function (err) {
-            console.log(err + " : " + resp);
+            console.log(err);
         });
 
 };
@@ -190,8 +190,8 @@ ScoreDao.prototype.getRank = function (listener) {
         contract: {function: 'getRank',}
     })
         .then(function (resp) {
-            listener && typeof (listener) === "function" && listener(resp.result);
-            console.log("getRank succ:" + resp.result);
+            console.log("getRank succ:" + resp.result + "  typeof:" + typeof (resp.result));
+            listener && typeof (listener) === "function" && listener(JSON.parse(resp.result));
         })
         .catch(function (err) {
             console.log("getRank failed:" + err);

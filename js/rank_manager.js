@@ -2,6 +2,8 @@
  * Created by junhua on 18-5-13.
  */
 
+const REFRESH_TIME = 10 * 1000;
+
 function RankManager(score_dao) {
     var self = this;
     this.scoreDao = score_dao;
@@ -10,25 +12,30 @@ function RankManager(score_dao) {
     self.updateRankData();
     window.setInterval(function () {
         self.updateRankData();
-    }, 60 * 1000);
+    }, REFRESH_TIME);
 }
 
 RankManager.prototype.daUpdateRankData = function (rankList) {
     if (!rankList) {
-        rankList = []
+        rankList = [];
     }
     var self = this;
     for (var rowIndex = 1; rowIndex < self.rankTable.rows.length; rowIndex++) {
         var row = self.rankTable.rows[rowIndex];
         row.cells[0].innerHTML = rowIndex + "";
 
-        var scoreObj = rankList[rowIndex - 1];
+        var scoreObj = null;
+        if (rowIndex - 1 < rankList.length) {
+            scoreObj = rankList[rowIndex - 1];
+        }
+        console.log("daUpdateRankData:" + scoreObj);
+
         if (scoreObj) {
             var username = scoreObj.name;
-            // var index = username.lastIndexOf('@');
-            // if (index > 0) {
-            //     username = username.substring(0, index);
-            // }
+            var index = username.lastIndexOf('@');
+            if (index > 0) {
+                username = username.substring(0, index);
+            }
             row.cells[1].innerHTML = username;
             row.cells[2].innerHTML = scoreObj.score;
         } else {
