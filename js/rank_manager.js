@@ -2,7 +2,7 @@
  * Created by junhua on 18-5-13.
  */
 
-const REFRESH_TIME = 10 * 1000;
+const REFRESH_TIME = 60 * 1000;
 
 function RankManager(score_dao) {
     var self = this;

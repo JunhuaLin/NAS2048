@@ -13,17 +13,12 @@ window.requestAnimationFrame(function () {
         var terminated = function (isWon, score, bestScore) {
             console.log("Terminated: score=" + score + "  bestScore:" + bestScore);
             var username = localStorageManager.getUserName();
-            try {
-                scoreDao.setScore(username, bestScore);
-            } catch (err) {
-
-            }
-
+            scoreDao.setScore(username, bestScore);
         };
         var updateScore = function (score, bestScore) {
             // console.log("UpdateScore: score=" + score + "  bestScore:" + bestScore);
-            var username = localStorageManager.getUserName();
-            scoreDao.setScore(username, bestScore);
+            // var username = localStorageManager.getUserName();
+            // scoreDao.setScore(username, bestScore);
         };
 
         htmlActuator.setOnTerminatedListener(terminated);
